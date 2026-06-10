@@ -34,6 +34,11 @@ public class Book {
         return year;
     }
 
+    @Override
+    public String toString() {
+        return "title=" + title + "\n author=" + author + "\n year=" + year ;
+    }
+
     public void setYear(int year) {
         this.year = year;
     }
