@@ -13,4 +13,10 @@ public class MemberRepository {
     public List<Member> getMembers() {
         return members;
     }
+    public Member getMemberByName(String name){
+        return members.stream()
+                        .filter(x -> x.getName() == name)
+                        .findFirst()
+                        .orElseThrow();
+    }
 }

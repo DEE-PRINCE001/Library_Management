@@ -13,4 +13,12 @@ public class BookRepository {
     public List<Book> getBooks() {
         return books;
     }
+    public Book getBookByTitle(String title){
+        Book book = books.stream()
+                    .filter(b -> b.getTitle() == title)
+                    .findFirst()
+                    .orElseThrow();
+
+        return book;            
+    }
 }
