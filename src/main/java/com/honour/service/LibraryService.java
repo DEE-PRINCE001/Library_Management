@@ -77,7 +77,7 @@ public class LibraryService {
             String title = scan.nextLine();
             Book book = bookRepository.getBookByTitle(title);
 
-            if (title)
+            if (book)
 
         }
         else{

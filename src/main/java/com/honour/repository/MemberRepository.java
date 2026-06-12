@@ -1,10 +1,13 @@
 package com.honour.repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import com.honour.entity.Member;
 
 public class MemberRepository {
-    List<Member> members;
+    private List<Member> members = new ArrayList<Member>();
 
     public void addMember(Member member) {
         members.add(member);
@@ -13,10 +16,13 @@ public class MemberRepository {
     public List<Member> getMembers() {
         return members;
     }
-    public Member getMemberByName(String name){
-        return members.stream()
-                        .filter(x -> x.getName() == name)
-                        .findFirst()
-                        .orElseThrow();
+
+    public Member getMemberByName(String name) throws NoSuchElementException {
+        Member member = members.stream()
+                    .filter(x -> x.getName().equalsIgnoreCase(name))
+                    .findFirst()
+                    .orElseThrow();
+
+    return member;
     }
 }

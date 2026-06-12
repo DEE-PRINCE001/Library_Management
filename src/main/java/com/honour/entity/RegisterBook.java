@@ -1,17 +1,18 @@
 package com.honour.entity;
 
-import java.time.LocalDate;
 
-public class Record {
+import java.util.Date;
+
+public class RegisterBook {
     Member member;
     Book book;
-    LocalDate date;
+    Date date;
 
-    public Record() {
+    public RegisterBook() {
 
     }
 
-    public Record(Member member, Book book, LocalDate date) {
+    public RegisterBook(Member member, Book book, Date date) {
         this.member = member;
         this.book = book;
         this.date = date;
@@ -33,11 +34,11 @@ public class Record {
         this.book = book;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
