@@ -8,7 +8,7 @@ import com.honour.entity.Member;
 import com.honour.repository.BookRepository;
 import com.honour.repository.MemberRepository;
 
-class RegistrationService {
+public class RegistrationService {
     Scanner scan = new Scanner(System.in);
 
     MemberRepository memberRepository = new MemberRepository();

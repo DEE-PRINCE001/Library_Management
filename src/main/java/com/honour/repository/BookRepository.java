@@ -1,10 +1,13 @@
 package com.honour.repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import com.honour.entity.Book;
 
 public class BookRepository {
-    List<Book> books;
+    private List<Book> books = new ArrayList<Book>();
 
     public void addBook(Book book) {
         books.add(book);
@@ -14,9 +17,9 @@ public class BookRepository {
         return books;
     }
 
-    public Book getBookByTitle(String title){
+    public Book getBookByTitle(String title) throws NoSuchElementException {
         Book book = books.stream()
-                            .filter(b -> b.getTitle() == title)
+                            .filter(b -> b.getTitle().equalsIgnoreCase(title))
                             .findFirst()
                             .orElseThrow();
 

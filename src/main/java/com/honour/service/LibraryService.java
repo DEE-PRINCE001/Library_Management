@@ -1,10 +1,16 @@
 package com.honour.service;
 import com.honour.repository.MemberRepository;
+import com.honour.repository.RegisterBookRepository;
+
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.honour.entity.Book;
 import com.honour.entity.Member;
+import com.honour.entity.RegisterBook;
 import com.honour.repository.BookRepository;
 
 public class LibraryService {
@@ -12,6 +18,7 @@ public class LibraryService {
 
     MemberRepository memberRepository = new MemberRepository();
     BookRepository bookRepository = new BookRepository();
+    RegisterBookRepository registerBookRepository = new RegisterBookRepository();
 
     public void registerMember(){
         System.out.println("Enter Member Id: ");
@@ -22,6 +29,8 @@ public class LibraryService {
         String address = scan.nextLine();
         
         memberRepository.addMember(new Member(name, id, address));
+
+        System.out.println("The Member " + name + " with the id " + id + " was registered successfully");
         
     }
     
@@ -41,30 +50,30 @@ public class LibraryService {
     public void borrowBook(){
         System.out.println("Enter your name");
         String name = scan.nextLine();
-        Member member = memberRepository.getMemberByName(name);
 
-        if (member != null){
+        try{
+        Member member = memberRepository.getMemberByName(name);
             System.out.println("Enter the title of the book");
             String title = scan.nextLine();
+            try{ 
             Book book = bookRepository.getBookByTitle(title);
 
-            if (book != null){
+            registerBookRepository.addRegisterBook(new RegisterBook(member, book, new Date()));
                 System.out.println("Borrow Operation Successful");
                 System.out.println("here is the details of the book you borrowed");
                 System.out.println("--------------");
                 System.out.println(book.toString());
 
             }
-            else{
+            catch(NoSuchElementException e){
                 System.out.println("The book: " + title + " is not available");
             }
 
 
             
         }
-        else {
+        catch(NoSuchElementException e ) {
             System.out.println("You are not yet registered, Kindly register now");
-            return;
         }
     }
 
@@ -72,23 +81,37 @@ public class LibraryService {
     public void returnBook(){
         System.out.println("Enter your name");
         String name = scan.nextLine();
-        Member member = memberRepository.getMemberByName(name);
+        
+        try{
+        
 
-        if (member != null){
-            System.out.println("Enter the name of the book to be returned");
+            Member member = memberRepository.getMemberByName(name);
+            
+            
+                System.out.println("Enter the name of the book to be returned");
             String title = scan.nextLine();
-            Book book = bookRepository.getBookByTitle(title);
+           
+           try{
+             List<RegisterBook> records = registerBookRepository.getRegisterBooks();
 
-            if (book != null){
+
+             records.stream()
+                        .filter((x) -> x.getMember().equals(member))
+                        .filter((x) -> x.getBook().getTitle().equalsIgnoreCase(title))
+                        .findAny()
+                        .orElseThrow();
+            
+            
                 System.out.println("Kindly drop the book on the tableh");
                 System.out.println("The return operation is successful ...;");
             }
 
-            else{
-                System.out.println("There is no book with that title, kindly check the title and try again.");
+            catch(NoSuchElementException a){
+                System.out.println("There is no Record of you borrowing this book");
             }
-        }
-        else{
+        
+    }
+        catch(NoSuchElementException e){
             System.out.println("Where you get the book, You ain't our member");
         }
     }
