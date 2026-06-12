@@ -14,21 +14,21 @@ public class RegistrationService {
     MemberRepository memberRepository = new MemberRepository();
     BookRepository bookRepository = new BookRepository();
 
-    public void registerMember(){
+    public void registerMember() {
         System.out.println("Enter Member Id: ");
         int id = Integer.parseInt(scan.nextLine());
         System.out.println("Enter your Name: ");
         String name = scan.nextLine();
         System.out.println("Enter your addressh: ");
         String address = scan.nextLine();
-        
+
         memberRepository.addMember(new Member(name, id, address));
-        
+
     }
-    
-    public void registerBook(){
+
+    public void registerBook() {
         System.out.println("Enter the title of the book: ");
-        String title  = scan.nextLine();
+        String title = scan.nextLine();
         System.out.println("Enter the Author of the book: ");
         String author = scan.nextLine();
         System.out.println("Enter the Year the book was published: ");
@@ -36,7 +36,6 @@ public class RegistrationService {
 
         Book book = new Book(title, author, year);
         bookRepository.addBook(book);
-
 
     }
 }
