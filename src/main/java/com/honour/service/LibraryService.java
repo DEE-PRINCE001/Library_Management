@@ -2,8 +2,6 @@ package com.honour.service;
 
 import com.honour.repository.MemberRepository;
 import com.honour.repository.RegisterBookRepository;
-
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -14,12 +12,33 @@ import com.honour.entity.Member;
 import com.honour.entity.RegisterBook;
 import com.honour.repository.BookRepository;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class LibraryService {
     Scanner scan = new Scanner(System.in);
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    private final String FOLDER_PATH = "library_data/";
 
     MemberRepository memberRepository = new MemberRepository();
     BookRepository bookRepository = new BookRepository();
     RegisterBookRepository registerBookRepository = new RegisterBookRepository();
+
+    public LibraryService() {
+        try {
+            Path path = Paths.get(FOLDER_PATH);
+            Files.createDirectories(path);
+
+        } catch (IOException e) {
+            System.out.println("Could not create directory: " + e.getMessage());
+        }
+    }
 
     public void registerMember() {
         System.out.println("Enter Member Id: ");
@@ -31,7 +50,21 @@ public class LibraryService {
 
         memberRepository.addMember(new Member(name, id, address));
 
-        System.out.println("The Member " + name + " with the id " + id + " was registered successfully");
+        Member aMember = new Member(name, id, address);
+
+        memberRepository.addMember(aMember);
+
+        try {
+            File file = new File(FOLDER_PATH + "Members.json");
+
+            mapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(file, aMember);
+
+            System.out.println("Member saved successfully!");
+        } catch (IOException e) {
+            System.out.println("Error saving member to JSON file.");
+            e.printStackTrace();
+        }
 
     }
 
@@ -45,6 +78,21 @@ public class LibraryService {
 
         Book book = new Book(title, author, year);
         bookRepository.addBook(book);
+
+        try {
+            File file = new File(FOLDER_PATH + "Book.json");
+
+            mapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(file, book);
+
+            System.out.println("Member saved successfully!");
+        } catch (IOException e) {
+            System.out.println("Error saving member to JSON file.");
+            e.printStackTrace();
+        }
+
+        System.out.println("Book registered successfully via repository!");
+    
 
     }
 
