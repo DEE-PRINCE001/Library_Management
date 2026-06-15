@@ -9,7 +9,8 @@ public class LibraryManagementSystem {
         Scanner scan = new Scanner(System.in);
 
         LibraryService libraryService = new LibraryService();
-
+        
+        libraryService.loadBooks();
         boolean endSession = false;
         while (true) {
 
@@ -57,5 +58,6 @@ public class LibraryManagementSystem {
         }
 
     }
+    
 
 }

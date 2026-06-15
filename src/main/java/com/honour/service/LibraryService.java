@@ -75,24 +75,22 @@ public class LibraryService {
         String author = scan.nextLine();
         System.out.println("Enter the Year the book was published: ");
         int year = Integer.parseInt(scan.nextLine());
-
-        Book book = new Book(title, author, year);
-        bookRepository.addBook(book);
-
         try {
+            Book book = new Book(title, author, year);
+            bookRepository.addBook(book);
+         
             File file = new File(FOLDER_PATH + "Book.json");
 
             mapper.writerWithDefaultPrettyPrinter()
                     .writeValue(file, book);
 
             System.out.println("Member saved successfully!");
-        } catch (IOException e) {
-            System.out.println("Error saving member to JSON file.");
-            e.printStackTrace();
-        }
+     
 
         System.out.println("Book registered successfully via repository!");
-    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -154,4 +152,11 @@ public class LibraryService {
             System.out.println("Where you get the book, You ain't our member");
         }
     }
+
+    public void loadBooks(){
+        bookRepository.loadBooks();
+    }
+
+
+    
 }
