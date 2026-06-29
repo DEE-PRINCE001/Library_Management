@@ -7,9 +7,18 @@ public class RegisterBook {
     Member member;
     Book book;
     Date date;
+    boolean isReturned =false;
 
     public RegisterBook() {
 
+    }
+
+    public boolean isReturned() {
+        return isReturned;
+    }
+
+    public void setReturned(boolean isReturned) {
+        this.isReturned = isReturned;
     }
 
     public RegisterBook(Member member, Book book, Date date) {

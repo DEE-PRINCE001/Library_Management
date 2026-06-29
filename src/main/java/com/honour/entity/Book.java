@@ -4,14 +4,16 @@ public class Book {
     private String title;
     private String author;
     private int year;
+    private int quantity;
 
     public Book() {
     }
 
-    public Book(String title, String author, int year) {
+    public Book(String title, String author, int year, int quantity) {
         this.title = title;
         this.author = author;
         this.year = year;
+        this.quantity = quantity;
     }
 
     public String getTitle() {
@@ -40,7 +42,15 @@ public class Book {
 
     @Override
     public String toString() {
-        return "title=" + title + " \n author=" + author + " \n year=" + year ;
+        return "title= " + title + " \n author= " + author + " \n year= " + year + "\n quantity= " + quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     

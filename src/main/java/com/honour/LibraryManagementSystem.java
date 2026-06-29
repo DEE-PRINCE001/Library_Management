@@ -10,6 +10,7 @@ public class LibraryManagementSystem {
 
         LibraryService libraryService = new LibraryService();
 
+
         boolean endSession = false;
         while (true) {
 
@@ -23,7 +24,9 @@ public class LibraryManagementSystem {
             System.out.println("2. Register Member");
             System.out.println("3. Borrow Book");
             System.out.println("4. Return Book");
-            System.out.println("5. Exit");
+            System.out.println("5. List all Books");
+            System.out.println("6. List all Members");
+            System.out.println("7. Exit");
             System.out.println();
             int choice = Integer.parseInt(scan.nextLine());
 
@@ -48,10 +51,37 @@ public class LibraryManagementSystem {
                 }
                 case 5: {
 
+                    libraryService.listAllBooks();
+                    break;
+
+                }
+                case 6: {
+
+                    libraryService.listAllMembers();
+                    break;
+
+                }
+                case 7: {
+
                     System.out.println("Thank for choosing us");
                     endSession = true;
 
                 }
+            }
+
+            System.out.println();
+            System.out.println("Do you want continue or exit the system?");
+            System.out.println("y/n");
+
+            String ch = scan.nextLine();
+
+            switch (ch) {
+                case "y":
+                    break;
+            
+                default:
+                    endSession = true;
+                    break;
             }
             
         }

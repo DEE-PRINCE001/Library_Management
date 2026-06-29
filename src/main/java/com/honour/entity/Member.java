@@ -5,6 +5,11 @@ public class Member{
     private int memberId;
     private String address;
 
+    @Override
+    public String toString() {
+        return "Member [name=" + name + ", memberId=" + memberId + ", address=" + address + "]";
+    }
+
     public Member() {
     }
 

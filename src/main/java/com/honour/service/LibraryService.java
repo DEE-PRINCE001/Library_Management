@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class LibraryService {
@@ -31,6 +32,7 @@ public class LibraryService {
     RegisterBookRepository registerBookRepository = new RegisterBookRepository();
 
     public LibraryService() {
+
         try {
             Path path = Paths.get(FOLDER_PATH);
             Files.createDirectories(path);
@@ -39,6 +41,7 @@ public class LibraryService {
             System.out.println("Could not create directory: " + e.getMessage());
         }
     }
+
 
     public void registerMember() {
         System.out.println("Enter Member Id: ");
@@ -75,8 +78,10 @@ public class LibraryService {
         String author = scan.nextLine();
         System.out.println("Enter the Year the book was published: ");
         int year = Integer.parseInt(scan.nextLine());
+        System.out.println("Enter the quantity of the book");
+        int quantity = Integer.parseInt(scan.nextLine());
 
-        Book book = new Book(title, author, year);
+        Book book = new Book(title, author, year, quantity);
         bookRepository.addBook(book);
 
         try {
@@ -92,7 +97,6 @@ public class LibraryService {
         }
 
         System.out.println("Book registered successfully via repository!");
-    
 
     }
 
@@ -107,6 +111,13 @@ public class LibraryService {
             try {
                 Book book = bookRepository.getBookByTitle(title);
 
+                if (book.getQuantity() <= 0){
+                    System.out.println("The book " + book.getTitle() + " is currently out of stock");
+                    return;
+                }
+
+                book.setQuantity(book.getQuantity() - 1);
+                bookRepository.updateBook(book);
                 registerBookRepository.addRegisterBook(new RegisterBook(member, book, new Date()));
                 System.out.println("Borrow Operation Successful");
                 System.out.println("here is the details of the book you borrowed");
@@ -136,13 +147,21 @@ public class LibraryService {
             try {
                 List<RegisterBook> records = registerBookRepository.getRegisterBooks();
 
-                records.stream()
+                RegisterBook record = records.stream()
                         .filter((x) -> x.getMember().equals(member))
                         .filter((x) -> x.getBook().getTitle().equalsIgnoreCase(title))
                         .findAny()
+
                         .orElseThrow();
 
-                System.out.println("Kindly drop the book on the tableh");
+                Book book = bookRepository.getBookByTitle(title);
+            
+                book.setQuantity(book.getQuantity() + 1);
+                bookRepository.updateBook(book);
+                record.setReturned(true);
+
+
+                System.out.println("Kindly drop the book on the table");
                 System.out.println("The return operation is successful ...;");
             }
 
@@ -154,4 +173,72 @@ public class LibraryService {
             System.out.println("Where you get the book, You ain't our member");
         }
     }
+
+    public void listAllBooks() {
+        File file = new File(FOLDER_PATH + "eBooks.json");
+
+        if (!file.exists()) {
+            System.out.println("bro u never register book yet");
+            return;
+        }
+
+        try {
+            
+            List<Book> allBooks = mapper.readValue(file, new TypeReference<List<Book>>() {
+            });
+
+            if (allBooks.isEmpty()) {
+                System.out.println("The book list is empty.");
+                return;
+            }
+
+           
+            System.out.println("(〃￣︶￣) these all the books we have in store(￣︶￣〃)");
+
+            int no = 1;
+            for (Book b : allBooks) {
+                System.out.println(no + ". " + b.toString());
+                System.out.println();
+                no++;
+                
+            }
+           
+        } catch (IOException e) {
+            System.out.println("Omo wahala dey oooo: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    public void listAllMembers() {
+        File file = new File(FOLDER_PATH + "eMembers.json");
+
+        if (!file.exists()) {
+            System.out.println("bro u never register book yet");
+            return;
+        }
+
+        try {
+            
+            List<Member> allMembers = mapper.readValue(file, new TypeReference<List<Member>>() {
+            });
+
+            if (allMembers.isEmpty()) {
+                System.out.println("The book list is empty.");
+                return;
+            }
+
+           
+            System.out.println("=== these are the list of all registered members we have in this Library ===");
+
+            for (Member b : allMembers) {
+                System.out.println(b.toString());
+                
+            }
+           
+        } catch (IOException e) {
+            System.out.println("Omo wahala dey oooo: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 }
